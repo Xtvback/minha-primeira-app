@@ -46,7 +46,6 @@
 
             return (
                 <div className="min-h-screen">
-                    {/* NAVEGAÇÃO */}
                     <nav className="max-w-6xl mx-auto px-6 py-8 flex justify-between items-center">
                         <span className="text-xl font-serif font-bold italic text-stone-800 uppercase">André M. Fernandes</span>
                         <div className="flex gap-8 text-xs font-bold uppercase tracking-widest text-stone-500">
@@ -56,7 +55,6 @@
                         </div>
                     </nav>
 
-                    {/* HEADER */}
                     <header className="max-w-6xl mx-auto px-6 pt-16 pb-24 text-center">
                         <div className="w-20 h-px bg-stone-300 mx-auto mb-8"></div>
                         <h1 className="text-5xl md:text-7xl font-serif font-light text-stone-800 mb-6 leading-tight">
@@ -68,7 +66,6 @@
                         </button>
                     </header>
 
-                    {/* LIVROS */}
                     <main id="livros" className="bg-stone-100 py-24 px-6">
                         <div className="max-w-6xl mx-auto">
                             <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-6">
@@ -124,7 +121,6 @@
                         </div>
                     </main>
 
-                    {/* SOBRE */}
                     <section id="sobre" className="max-w-3xl mx-auto px-6 py-32 text-center">
                         <h2 className="text-3xl font-serif mb-12 text-stone-800 uppercase tracking-tight">O Autor</h2>
                         <div className="text-stone-600 leading-loose space-y-8 text-lg font-light text-justify">
@@ -133,15 +129,14 @@
                         </div>
                     </section>
 
-                    {/* CONTACTO */}
                     <footer id="contacto" className="bg-stone-900 text-stone-400 py-24 px-6">
                         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-16">
                             <div className="text-center md:text-left">
                                 <h2 className="text-white text-2xl font-serif mb-4">Mantém o contacto</h2>
-                                <p className="max-w-xs mb-8 text-sm">Subscreve para receberes notícias sobre novos lançamentos e eventos literários.</p>
+                                <p className="max-w-xs mb-8 text-sm text-stone-400">Subscreve para receberes notícias sobre novos lançamentos e eventos literários.</p>
                                 <div className="flex gap-6 justify-center md:justify-start">
-                                    <span className="text-xs font-bold uppercase tracking-widest cursor-pointer hover:text-white transition-colors">Instagram</span>
-                                    <span className="text-xs font-bold uppercase tracking-widest cursor-pointer hover:text-white transition-colors">Correio</span>
+                                    <a href="https://www.instagram.com/andre.f.m.fernandes/" target="_blank" className="text-xs font-bold uppercase tracking-widest hover:text-white transition-colors no-underline">Instagram</a>
+                                    <a href="mailto:xtvback@outlook.com" className="text-xs font-bold uppercase tracking-widest hover:text-white transition-colors no-underline">Correio</a>
                                 </div>
                             </div>
                             <div className="w-full max-w-sm">
@@ -155,7 +150,7 @@
                                     />
                                     <button 
                                         type="submit" 
-                                        className="w-full bg-stone-50 text-stone-900 px-6 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white transition-all shadow-lg"
+                                        className="w-full bg-stone-50 text-stone-900 px-6 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white transition-all shadow-lg active:scale-95"
                                     >
                                         Subscrever Novidades
                                     </button>
