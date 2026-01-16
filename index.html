@@ -31,14 +31,14 @@
         const App = () => {
             const [viewMode, setViewMode] = useState("grid");
             const [meusLivros] = useState([
-                { id: 1, titulo: "A Última Simetria", ano: "2026", genero: "Ficção Científica, Mistério", corFundo: "bg-stone-200", imagem: "https://m.media-amazon.com/images/P/B0G7RRHJZV.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B0G7RRHJZV", descricao: "G acredita que curou a humanidade do seu maior defeito, o livre arbítrio, do topo do Encephalon, a sua fortaleza de vidro e ouro, ele vigia um mundo onde a obediência é absoluta e o silêncio é lei. Para ele, a simetria é a única forma de justiça e o caos é uma doença que foi erradicada. Mas nas fundações da torre, a quilómetros de profundidade, a terra começa a reclamar o que é seu. Um batimento cardíaco, surdo e colossal, faz tremer a estrutura imaculada do seu reinado. Não é uma falha técnica, é o despertar de uma força antiga que a ciência não consegue explicar e que a magia não consegue calar. À medida que o vidro estala e as sombras se alongam, G descobre o horror da sua verdadeira posição: ele nunca foi o arquiteto do destino, foi apenas o carcereiro de algo que está prestes a quebrar as correntes." },
-                { id: 2, titulo: "A Mentira Sagrada", ano: "2025", genero: "Thriller, Mistério", corFundo: "bg-stone-300", imagem: "https://m.media-amazon.com/images/P/B0F4BS4K7W.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B0F4BS4K7W", descricao: "Prepara-te para desafiar tudo o que acreditas sobre a história e a fé. A Mentira Sagrada é um percurso profundo que desafia o que tomamos como verdade sobre a espiritualidade e a história da humanidade. Nesta história cativante, André M. Fernandes transporta-nos para uma aldeia onde tradições antigas moldam vidas e anseios universais. Ao seguir a busca de uma personagem pelo sentido da sua existência, o autor guia-nos por um labirinto de emoções e inquietações, explorando as relações humanas e o confronto eterno entre crenças e realidade. Com uma escrita rica e envolvente, A Mentira Sagrada convida-nos a refletir profundamente sobre o que acreditamos e sentimos. Descobre novas perspetivas sobre a figura de Jesus, os mistérios do mundo e os enigmas que envolvem a história mais antiga da humanidade. Este livro celebra a liberdade de pensar e sentir, desafiando-nos a abrir a mente para novas formas de ver e compreender." },
-                { id: 3, titulo: "Plano B", ano: "2021", genero: "Ficção, Suspense", corFundo: "bg-stone-400", imagem: "https://m.media-amazon.com/images/P/B09KQD5Y8W.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B09KQD5Y8W", descricao: "O início e o fim de uma civilização, um passado e um futuro, com um segredo obscuro que envolve limites religiosos e divinos. Recum tem a sua última missão marcada para terraformar o planeta Terra, mas mesmo antes de partir, os seus pais retornam ao seu planeta de origem com um segredo obscuro, assim como uma missão em troca da corrente. Essa missão irá alterar o curso da história daquela civilização e provocar o início de outra. Recum terá de optar por diversas vezes e as suas respostas ditarão o futuro da sua sociedade, assim como da sua família. Nem tudo é o que parece, mas ele é o plano B da civilização em risco de extinção." },
-                { id: 4, titulo: "Segunda Oportunidade", ano: "2018", genero: "Ficção, Drama", corFundo: "bg-stone-100", imagem: "https://m.media-amazon.com/images/P/B07C4Y78QW.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B07C4Y78QW", descricao: "Tudo começa quando o jovem Eros regressa à sua cidade natal com o intuito de repensar e rever certas pessoas referente a um crime terrível cometido no passado, no entanto, alguém já o seguia e estava disposta a o ajudar de forma a perceber que nem tudo aquilo que parece, é." },
-                { id: 5, titulo: "Orbis Terrarum Abyssus", ano: "2018", genero: "Ficção, Mistério", corFundo: "bg-stone-700", imagem: "https://m.media-amazon.com/images/P/B07C4RLCCL.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B07C4RLCCL", descricao: "Orbis Terrarum Abyssus é focado na história de um velhote com o seu propósito de tentar tornar este inferno num lugar melhor, procurando igualmente a sua redenção de todas as atrocidades praticadas enquanto foi vivo. Todos os seres pecadores de grande delito que morrem vão para Orbis Terrarum Abyssus pagar pelo preço que outrora em vida fizeram os outros sofrer, no entanto, por vezes existem profecias que rasgam as regras e ultrapassam as barreiras impostas pelos anciões do tempo e da ordem. Abner, o velhote, irá descobrir um motivo para a redenção ou o fim das regras?" },
-                { id: 6, titulo: "Na Luz do Horizonte", ano: "2018", genero: "Ficção Contemporânea", corFundo: "bg-stone-500", imagem: "https://m.media-amazon.com/images/P/B07DRBJFT7.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B07DRBJFT7", descricao: "Não aconselhado a pessoas preconceituosas. As leis aqui são todas quebradas. Todos nós nascemos um dia, todos nós iremos morrer um dia, mas nada disso importa se não for para valer a pena, principalmente, quando a nossa alma vale a pena. Packa é uma rapariga que foi obrigada não só a crescer com a dura e triste realidade, mas a tentar de tudo para se adaptar às tentações do lado obscuro da religião. O seu lado físico é destruído, mas a sua maior força, o seu espírito, inquestionável." },
-                { id: 7, titulo: "Inocente", ano: "2018", genero: "Suspense, Mistério", corFundo: "bg-stone-600", imagem: "https://m.media-amazon.com/images/P/B078Y8ZSP6.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B078Y8ZSP6", descricao: "Este livro é baseado numa rapariga que conheci nos meus tempos de escola, da qual fui somente um mero observador, e através das notícias entre colegas e desabafos dela mesma, deduzi aquilo que todos deduzíamos. No entanto, sendo baseado, não significa necessariamente a sua história integral e real, é somente uma base para uma história, um livro." },
-                { id: 8, titulo: "Amor Meu", ano: "2017", genero: "Ficção, Romance", corFundo: "bg-stone-300", imagem: "https://m.media-amazon.com/images/P/B077FLBYZH.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B077FLBYZH", descricao: "Este livro é um romance baseado na história de dois jovens que descobrem o amor da sua vida, provavelmente cedo demais, no entanto, em circunstâncias difíceis, como a distância e a saudade vão criar muitos obstáculos. Por vezes o amor bate à porta, mas é cedo demais para o compreendermos, no entanto, quando é amor será que importa algo mais." }
+                { id: 1, titulo: "A Última Simetria", ano: "2026", genero: "Ficção Científica, Mistério", corFundo: "bg-stone-200", imagem: "https://m.media-amazon.com/images/P/B0G7RRHJZV.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B0G7RRHJZV", descricao: "G acredita que curou a humanidade do seu maior defeito, o livre arbítrio. Do topo do Encephalon, ele vigia um mundo onde a obediência é absoluta. Mas nas fundações da torre, a terra começa a reclamar o que é seu. Um batimento cardíaco colossal faz tremer a estrutura imaculada, revelando que ele nunca foi o arquiteto do destino, mas sim o carcereiro de algo prestes a quebrar as correntes." },
+                { id: 2, titulo: "A Mentira Sagrada", ano: "2025", genero: "Thriller, Mistério", corFundo: "bg-stone-300", imagem: "https://m.media-amazon.com/images/P/B0F4BS4K7W.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B0F4BS4K7W", descricao: "Um percurso profundo que desafia o que tomamos como verdade sobre a espiritualidade e a história da humanidade. André M. Fernandes transporta-nos para uma aldeia onde tradições antigas moldam vidas, convidando-nos a refletir sobre a figura de Jesus e os mistérios que envolvem a história mais antiga do mundo." },
+                { id: 3, titulo: "Plano B", ano: "2021", genero: "Ficção, Suspense", corFundo: "bg-stone-400", imagem: "https://m.media-amazon.com/images/P/B09KQD5Y8W.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B09KQD5Y8W", descricao: "Recum tem a missão de terraformar a Terra, mas os seus pais retornam com um segredo obscuro que irá alterar o curso da civilização. Ele terá de optar diversas vezes, e as suas respostas ditarão o futuro da sua sociedade. Ele é o plano B de uma civilização em risco de extinção." },
+                { id: 4, titulo: "Segunda Oportunidade", ano: "2018", genero: "Ficção, Drama", corFundo: "bg-stone-100", imagem: "https://m.media-amazon.com/images/P/B07C4Y78QW.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B07C4Y78QW", descricao: "Eros regressa à sua cidade natal para rever certas pessoas referentes a um crime terrível cometido no passado. Alguém já o seguia, disposta a ajudá-lo a perceber que nem tudo o que parece, é." },
+                { id: 5, titulo: "Orbis Terrarum Abyssus", ano: "2018", genero: "Ficção, Mistério", corFundo: "bg-stone-700", imagem: "https://m.media-amazon.com/images/P/B07C4RLCCL.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B07C4RLCCL", descricao: "Focado na história de um idoso que procura redenção pelas atrocidades praticadas em vida. Num lugar onde pecadores pagam pelos seus crimes, Abner descobre que existem profecias que podem rasgar as regras impostas pelos anciões do tempo." },
+                { id: 6, titulo: "Na Luz do Horizonte", ano: "2018", genero: "Ficção Contemporânea", corFundo: "bg-stone-500", imagem: "https://m.media-amazon.com/images/P/B07DRBJFT7.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B07DRBJFT7", descricao: "Packa foi obrigada a adaptar-se às tentações do lado obscuro da religião. Embora o seu corpo seja fragilizado, o seu espírito permanece inquestionável numa luta pela sobrevivência e pela verdade da sua alma." },
+                { id: 7, titulo: "Inocente", ano: "2018", genero: "Suspense, Mistério", corFundo: "bg-stone-600", imagem: "https://m.media-amazon.com/images/P/B078Y8ZSP6.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B078Y8ZSP6", descricao: "Baseado em factos reais da juventude do autor, este livro explora as deduções e mistérios que envolvem a vida de uma jovem, servindo de base para uma narrativa densa sobre a perceção alheia e a realidade." },
+                { id: 8, titulo: "Amor Meu", ano: "2017", genero: "Ficção, Romance", corFundo: "bg-stone-300", imagem: "https://m.media-amazon.com/images/P/B077FLBYZH.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B077FLBYZH", descricao: "A história de dois jovens que descobrem o amor cedo demais. Entre obstáculos de distância e saudade, este romance questiona se o verdadeiro amor consegue compreender o tempo e as circunstâncias difíceis." }
             ]);
 
             const scrollToSection = (id) => {
@@ -48,18 +48,16 @@
 
             return (
                 <div className="min-h-screen">
-                    {/* NAVEGAÇÃO */}
                     <nav className="max-w-6xl mx-auto px-6 py-8 flex justify-between items-center">
                         <span className="text-xl font-serif font-bold italic text-stone-800 uppercase">André M. Fernandes</span>
                         <div className="flex gap-6 text-xs font-bold uppercase tracking-widest text-stone-500">
-                            <button onClick={() => scrollToSection("futuro")} className="hover:text-stone-900 transition-colors flex items-center gap-1">BREVEMENTE <IconSparkles /></button>
                             <button onClick={() => scrollToSection("livros")} className="hover:text-stone-900 transition-colors">LIVROS</button>
                             <button onClick={() => scrollToSection("sobre")} className="hover:text-stone-900 transition-colors">SOBRE</button>
+                            <button onClick={() => scrollToSection("futuro")} className="hover:text-stone-900 transition-colors flex items-center gap-1">BREVEMENTE <IconSparkles /></button>
                             <button onClick={() => scrollToSection("contacto")} className="hover:text-stone-900 transition-colors">CONTACTO</button>
                         </div>
                     </nav>
 
-                    {/* HEADER */}
                     <header className="max-w-6xl mx-auto px-6 pt-16 pb-24 text-center">
                         <div className="w-20 h-px bg-stone-300 mx-auto mb-8"></div>
                         <h1 className="text-5xl md:text-7xl font-serif font-light text-stone-800 mb-6 leading-tight">
@@ -67,44 +65,14 @@
                             <span className="italic text-stone-600">as fronteiras da mente.</span>
                         </h1>
                         <button onClick={() => scrollToSection("livros")} className="bg-stone-900 text-white px-8 py-4 rounded-full inline-flex items-center gap-2 hover:bg-stone-800 transition-all shadow-xl font-bold uppercase text-[10px] tracking-widest">
-                            Explorar Obras <IconChevronRight />
+                            Explorar Catálogo <IconChevronRight />
                         </button>
                     </header>
 
-                    {/* FUTUROS PROJETOS (DESTAQUE SAKURA) */}
-                    <section id="futuro" className="py-24 px-6 bg-stone-900 text-stone-100">
-                        <div className="max-w-6xl mx-auto">
-                            <div className="text-center mb-16">
-                                <h2 className="text-3xl font-serif mb-4 uppercase tracking-wider">A Próxima Viagem</h2>
-                                <p className="text-stone-400 text-xs font-bold uppercase tracking-[0.3em]">Exclusivo 2026</p>
-                            </div>
-                            
-                            <div className="max-w-4xl mx-auto bg-stone-800/50 rounded-3xl p-8 md:p-12 border border-stone-700 flex flex-col md:flex-row items-center gap-12 text-left">
-                                <div className="w-full md:w-1/2">
-                                    <div className="aspect-[2/3] w-full max-w-[300px] mx-auto rounded-lg overflow-hidden shadow-2xl ring-1 ring-white/10 transition-transform hover:scale-105 duration-500">
-                                        <img src="capa-futuro.jpg" alt="Capa Enquanto Respirares" className="w-full h-full object-cover" />
-                                    </div>
-                                </div>
-                                <div className="w-full md:w-1/2">
-                                    <span className="text-stone-500 text-xs font-bold uppercase tracking-widest">Lançamento Previsto para 2026</span>
-                                    <h3 className="text-4xl font-serif my-4">Enquanto Respirares</h3>
-                                    <div className="w-12 h-px bg-stone-600 mb-8"></div>
-                                    <p className="text-stone-300 italic text-lg leading-relaxed mb-8">
-                                        "Sakura guarda o segredo que a terra tenta esconder, mas o vento sussurra que o tempo das flores está a chegar ao fim."
-                                    </p>
-                                    <div className="inline-block px-6 py-2 border border-stone-600 rounded-full text-[10px] font-bold uppercase tracking-widest text-stone-400">
-                                        Projeto em Escrita
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* LIVROS ATUAIS */}
                     <main id="livros" className="bg-silk py-24 px-6">
                         <div className="max-w-6xl mx-auto">
                             <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-6">
-                                <h2 className="text-3xl font-serif text-stone-800 border-l-4 border-stone-800 pl-6">Obras Publicadas</h2>
+                                <h2 className="text-3xl font-serif text-stone-800 border-l-4 border-stone-800 pl-6 uppercase tracking-tight">Obras Publicadas</h2>
                                 <div className="flex bg-white rounded-full p-1 shadow-sm border border-stone-200">
                                     <button onClick={() => setViewMode("grid")} className={`flex items-center gap-2 px-6 py-2 rounded-full text-[10px] font-bold uppercase transition-all ${viewMode === "grid" ? "bg-stone-900 text-white" : "text-stone-400"}`}><IconLayoutGrid /> Grelha</button>
                                     <button onClick={() => setViewMode("timeline")} className={`flex items-center gap-2 px-6 py-2 rounded-full text-[10px] font-bold uppercase transition-all ${viewMode === "timeline" ? "bg-stone-900 text-white" : "text-stone-400"}`}><IconListTree /> Cronologia</button>
@@ -156,16 +124,41 @@
                         </div>
                     </main>
 
-                    {/* SOBRE */}
                     <section id="sobre" className="max-w-3xl mx-auto px-6 py-32 text-center">
                         <h2 className="text-3xl font-serif mb-12 text-stone-800 uppercase tracking-tight">O Autor</h2>
                         <div className="text-stone-600 leading-loose space-y-8 text-lg font-light text-justify">
-                            <p>André M. Fernandes dedica a sua escrita à exploração de temas contemporâneos que cruzam a filosofia e a ciência com a experiência humana mais crua, com um estilo que privilegia a atmosfera e a precisão da linguagem, as suas histórias procuram desvendar o que está escondido na normalidade.</p>
+                            <p>André M. Fernandes dedica a sua escrita à exploração de temas contemporâneos que cruzam a filosofia e a ciência com a experiência humana mais crua. Com um estilo que privilegia a atmosfera e a precisão da linguagem, as suas histórias procuram desvendar o que está escondido na normalidade.</p>
                             <p>Desde Amor Meu em 2017, o seu percurso tem sido pautado pela procura da qualidade literária e pela criação de universos que permanecem com o leitor muito depois da última página ser lida.</p>
                         </div>
                     </section>
 
-                    {/* CONTACTO */}
+                    <section id="futuro" className="py-24 px-6 bg-stone-900 text-stone-100">
+                        <div className="max-w-6xl mx-auto">
+                            <div className="text-center mb-16">
+                                <h2 className="text-3xl font-serif mb-4 uppercase tracking-wider">A Próxima Viagem</h2>
+                                <p className="text-stone-400 text-xs font-bold uppercase tracking-[0.3em]">Exclusivo 2026</p>
+                            </div>
+                            <div className="max-w-4xl mx-auto bg-stone-800/50 rounded-3xl p-8 md:p-12 border border-stone-700 flex flex-col md:flex-row items-center gap-12 text-left">
+                                <div className="w-full md:w-1/2">
+                                    <div className="aspect-[2/3] w-full max-w-[300px] mx-auto rounded-lg overflow-hidden shadow-2xl ring-1 ring-white/10 transition-transform hover:scale-105 duration-500">
+                                        <img src="capa-futuro.jpg" alt="Capa Enquanto Respirares" className="w-full h-full object-cover" />
+                                    </div>
+                                </div>
+                                <div className="w-full md:w-1/2">
+                                    <span className="text-stone-500 text-xs font-bold uppercase tracking-widest">Lançamento Previsto para 2026</span>
+                                    <h3 className="text-4xl font-serif my-4">Enquanto Respirares</h3>
+                                    <div className="w-12 h-px bg-stone-600 mb-8"></div>
+                                    <p className="text-stone-300 italic text-lg leading-relaxed mb-8">
+                                        "Sakura guarda o segredo que a terra tenta esconder, mas o vento sussurra que o tempo das flores está a chegar ao fim."
+                                    </p>
+                                    <div className="inline-block px-6 py-2 border border-stone-600 rounded-full text-[10px] font-bold uppercase tracking-widest text-stone-400">
+                                        Projeto em Escrita
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
                     <footer id="contacto" className="bg-stone-900 text-stone-400 py-24 px-6">
                         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-16">
                             <div className="text-center md:text-left">
@@ -178,19 +171,8 @@
                             </div>
                             <div className="w-full max-w-sm">
                                 <form action="https://formspree.io/f/mnjjnrgn" method="POST" className="flex flex-col gap-3">
-                                    <input 
-                                        type="email" 
-                                        name="email"
-                                        placeholder="Endereço de correio eletrónico" 
-                                        required 
-                                        className="w-full bg-stone-800 border border-stone-700 rounded-lg px-5 py-4 text-sm text-white outline-none focus:ring-1 focus:ring-stone-500 transition-all placeholder:text-stone-600" 
-                                    />
-                                    <button 
-                                        type="submit" 
-                                        className="w-full bg-stone-50 text-stone-900 px-6 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white transition-all shadow-lg active:scale-95"
-                                    >
-                                        Subscrever Novidades
-                                    </button>
+                                    <input type="email" name="email" placeholder="Endereço de correio eletrónico" required className="w-full bg-stone-800 border border-stone-700 rounded-lg px-5 py-4 text-sm text-white outline-none focus:ring-1 focus:ring-stone-500 transition-all placeholder:text-stone-600" />
+                                    <button type="submit" className="w-full bg-stone-50 text-stone-900 px-6 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white transition-all shadow-lg active:scale-95">Subscrever Novidades</button>
                                 </form>
                             </div>
                         </div>
