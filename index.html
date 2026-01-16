@@ -8,9 +8,12 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:italic&family=Inter:wght@300;400;700&display=swap");
-        body { font-family: "Inter", sans-serif; background-color: #fcfaf7; }
+        body { font-family: "Inter", sans-serif; }
         .font-serif { font-family: "Instrument Serif", serif; }
     </style>
 </head>
@@ -18,19 +21,29 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
 
         const IconShoppingCart = () => (<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>);
         const IconChevronRight = () => (<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>);
+        const IconCheckCircle = () => (<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>);
+        const IconLoader2 = () => (<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="animate-spin"><path d="M21 12a9 9 0 1 1-6.21-8.58"/></svg>);
         const IconLayoutGrid = () => (<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>);
         const IconListTree = () => (<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10H8"/><path d="M20 14H8"/><path d="M20 18H8"/><path d="M20 6H8"/><path d="M4 18v-12"/></svg>);
+        const IconExternalLink = () => (<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>);
 
         const App = () => {
             const [viewMode, setViewMode] = useState("grid");
+            const [email, setEmail] = useState("");
+            const [subscribed, setSubscribed] = useState(false);
             const [meusLivros] = useState([
-                { id: 1, titulo: "A Última Simetria", ano: "2026", genero: "Ficção Científica", corFundo: "bg-stone-200", imagem: "https://m.media-amazon.com/images/P/B0G7RRHJZV.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B0G7RRHJZV", descricao: "G acredita que curou a humanidade do seu maior defeito..." },
-                { id: 2, titulo: "A Mentira Sagrada", ano: "2025", genero: "Thriller", corFundo: "bg-stone-300", imagem: "https://m.media-amazon.com/images/P/B0F4BS4K7W.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B0F4BS4K7W", descricao: "Prepara-te para desafiar tudo o que acreditas sobre a história e a fé..." },
-                { id: 3, titulo: "Plano B", ano: "2021", genero: "Ficção", corFundo: "bg-stone-400", imagem: "https://m.media-amazon.com/images/P/B09KQD5Y8W.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B09KQD5Y8W", descricao: "O início e o fim de uma civilização..." }
+                { id: 1, titulo: "A Última Simetria", ano: "2026", genero: "Ficção Científica, Mistério", corFundo: "bg-stone-200", imagem: "https://m.media-amazon.com/images/P/B0G7RRHJZV.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B0G7RRHJZV", descricao: "G acredita que curou a humanidade do seu maior defeito, o livre arbítrio..." },
+                { id: 2, titulo: "A Mentira Sagrada", ano: "2025", genero: "Thriller, Mistério", corFundo: "bg-stone-300", imagem: "https://m.media-amazon.com/images/P/B0F4BS4K7W.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B0F4BS4K7W", descricao: "Prepara-te para desafiar tudo o que acreditas sobre a história e a fé..." },
+                { id: 3, titulo: "Plano B", ano: "2021", genero: "Ficção, Suspense", corFundo: "bg-stone-400", imagem: "https://m.media-amazon.com/images/P/B09KQD5Y8W.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B09KQD5Y8W", descricao: "O início e o fim de uma civilização, um passado e um futuro..." },
+                { id: 4, titulo: "Segunda Oportunidade", ano: "2018", genero: "Ficção, Drama", corFundo: "bg-stone-100", imagem: "https://m.media-amazon.com/images/P/B07C4Y78QW.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B07C4Y78QW", descricao: "Tudo começa quando o jovem Eros regressa à sua cidade natal..." },
+                { id: 5, titulo: "Orbis Terrarum Abyssus", ano: "2018", genero: "Ficção, Mistério", corFundo: "bg-stone-700", imagem: "https://m.media-amazon.com/images/P/B07C4RLCCL.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B07C4RLCCL", descricao: "Focado na história de um velhote com o seu propósito de redenção..." },
+                { id: 6, titulo: "Na Luz do Horizonte", ano: "2018", genero: "Ficção Contemporânea", corFundo: "bg-stone-500", imagem: "https://m.media-amazon.com/images/P/B07DRBJFT7.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B07DRBJFT7", descricao: "As leis aqui são todas quebradas. Nada importa se não valer a pena..." },
+                { id: 7, titulo: "Inocente", ano: "2018", genero: "Suspense, Mistério", corFundo: "bg-stone-600", imagem: "https://m.media-amazon.com/images/P/B078Y8ZSP6.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B078Y8ZSP6", descricao: "Baseado numa rapariga que conheci nos meus tempos de escola..." },
+                { id: 8, titulo: "Amor Meu", ano: "2017", genero: "Ficção, Romance", corFundo: "bg-stone-300", imagem: "https://m.media-amazon.com/images/P/B077FLBYZH.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B077FLBYZH", descricao: "Dois jovens que descobrem o amor da sua vida, cedo demais..." }
             ]);
 
             const scrollToSection = (id) => {
@@ -39,54 +52,113 @@
             };
 
             return (
-                <div className="min-h-screen">
+                <div className="min-h-screen bg-[#fcfaf7] text-stone-900 selection:bg-stone-200">
                     <nav className="max-w-6xl mx-auto px-6 py-8 flex justify-between items-center">
                         <span className="text-xl font-serif font-bold italic text-stone-800 uppercase">André M. Fernandes</span>
                         <div className="flex gap-8 text-xs font-bold uppercase tracking-widest text-stone-500">
-                            <button onClick={() => scrollToSection("livros")} className="hover:text-stone-900">Livros</button>
-                            <button onClick={() => scrollToSection("sobre")} className="hover:text-stone-900">Sobre</button>
+                            <button onClick={() => scrollToSection("livros")} className="hover:text-stone-900 transition-colors uppercase">Livros</button>
+                            <button onClick={() => scrollToSection("sobre")} className="hover:text-stone-900 transition-colors uppercase">Sobre</button>
+                            <button onClick={() => scrollToSection("contacto")} className="hover:text-stone-900 transition-colors uppercase">Contacto</button>
                         </div>
                     </nav>
 
                     <header className="max-w-6xl mx-auto px-6 pt-16 pb-24 text-center">
+                        <div className="w-20 h-px bg-stone-300 mx-auto mb-8"></div>
                         <h1 className="text-5xl md:text-7xl font-serif font-light text-stone-800 mb-6 leading-tight">
                             Escrita que desafia <br />
                             <span className="italic text-stone-600">as fronteiras da mente.</span>
                         </h1>
-                        <button onClick={() => scrollToSection("livros")} className="bg-stone-900 text-white px-8 py-4 rounded-full inline-flex items-center gap-2 font-bold uppercase text-[10px] tracking-widest">
+                        <button onClick={() => scrollToSection("livros")} className="bg-stone-900 text-white px-8 py-4 rounded-full inline-flex items-center gap-2 hover:bg-stone-800 transition-all shadow-xl font-bold uppercase text-[10px] tracking-widest">
                             Explorar Obras <IconChevronRight />
                         </button>
                     </header>
 
-                    <main id="livros" className="bg-stone-100 py-24 px-6">
-                        <div className="max-w-6xl mx-auto">
-                            <div className="flex justify-between items-center mb-16">
+                    <main id="livros" className="bg-stone-100 py-24">
+                        <div className="max-w-6xl mx-auto px-6">
+                            <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-6">
                                 <h2 className="text-3xl font-serif text-stone-800 border-l-4 border-stone-800 pl-6">Obras Publicadas</h2>
-                                <div className="flex bg-white rounded-full p-1 shadow-sm">
-                                    <button onClick={() => setViewMode("grid")} className={`px-6 py-2 rounded-full text-[10px] font-bold uppercase ${viewMode === "grid" ? "bg-stone-900 text-white" : "text-stone-400"}`}><IconLayoutGrid /></button>
-                                    <button onClick={() => setViewMode("timeline")} className={`px-6 py-2 rounded-full text-[10px] font-bold uppercase ${viewMode === "timeline" ? "bg-stone-900 text-white" : "text-stone-400"}`}><IconListTree /></button>
+                                <div className="flex bg-white rounded-full p-1 shadow-sm border border-stone-200">
+                                    <button onClick={() => setViewMode("grid")} className={`flex items-center gap-2 px-6 py-2 rounded-full text-[10px] font-bold uppercase transition-all ${viewMode === "grid" ? "bg-stone-900 text-white" : "text-stone-400"}`}>
+                                        <IconLayoutGrid /> Grelha
+                                    </button>
+                                    <button onClick={() => setViewMode("timeline")} className={`flex items-center gap-2 px-6 py-2 rounded-full text-[10px] font-bold uppercase transition-all ${viewMode === "timeline" ? "bg-stone-900 text-white" : "text-stone-400"}`}>
+                                        <IconListTree /> Cronologia
+                                    </button>
                                 </div>
                             </div>
                             
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-                                {meusLivros.map((livro) => (
-                                    <div key={livro.id} className="bg-white p-8 rounded shadow-sm border border-stone-200">
-                                        <img src={livro.imagem} className="w-48 h-72 object-cover mb-6 mx-auto shadow-lg" alt={livro.titulo} />
-                                        <h3 className="text-2xl font-serif mb-2">{livro.titulo}</h3>
-                                        <p className="text-stone-500 text-sm mb-6">{livro.descricao}</p>
-                                        <a href={livro.ligacao} target="_blank" className="bg-stone-900 text-white px-6 py-3 rounded-full text-[10px] uppercase font-bold inline-block">Comprar na Amazon</a>
+                            {viewMode === "grid" ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-24">
+                                    {meusLivros.map((livro) => (
+                                        <div key={livro.id} className="group flex flex-col">
+                                            <div className={`aspect-[2/3] w-full max-w-[300px] ${livro.corFundo} mb-8 rounded-sm shadow-2xl flex items-center justify-center p-4 transition-all group-hover:scale-[1.02]`}>
+                                                <img src={livro.imagem} alt={livro.titulo} className="max-h-full max-w-full object-contain shadow-md" />
+                                            </div>
+                                            <div className="border-b border-stone-200 pb-2 mb-4">
+                                                <h3 className="text-2xl font-serif text-stone-800 leading-none">{livro.titulo}</h3>
+                                                <span className="text-stone-400 text-sm font-bold tracking-widest">{livro.ano}</span>
+                                            </div>
+                                            <p className="text-stone-600 leading-relaxed text-sm italic mb-6">{livro.descricao}</p>
+                                            <a href={livro.ligacao} target="_blank" className="inline-flex items-center gap-3 bg-stone-900 text-stone-50 px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-stone-700 transition-all no-underline shadow-md">
+                                                Comprar na Amazon <IconShoppingCart />
+                                            </a>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="relative max-w-4xl mx-auto">
+                                    <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-stone-300 transform md:-translate-x-1/2"></div>
+                                    <div className="space-y-24">
+                                        {[...meusLivros].sort((a,b) => parseInt(b.ano) - parseInt(a.ano)).map((livro, index) => (
+                                            <div key={livro.id} className={`relative flex flex-col md:flex-row items-center gap-8 ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}>
+                                                <div className="absolute left-4 md:left-1/2 w-3 h-3 bg-stone-900 rounded-full border-4 border-[#fcfaf7] transform md:-translate-x-1/2 z-10"></div>
+                                                <div className="w-full md:w-1/2 pl-12 md:pl-0">
+                                                    <div className={`p-8 bg-white rounded-2xl shadow-sm border border-stone-200 ${index % 2 === 0 ? "md:mr-10" : "md:ml-10"}`}>
+                                                        <span className="text-3xl font-serif font-bold text-stone-200">{livro.ano}</span>
+                                                        <h3 className="text-2xl font-serif text-stone-800 mb-4">{livro.titulo}</h3>
+                                                        <p className="text-stone-600 text-sm italic mb-6">{livro.descricao}</p>
+                                                        <a href={livro.ligacao} target="_blank" className="text-[10px] font-bold uppercase tracking-widest text-stone-900 flex items-center gap-2 no-underline">
+                                                            Ver na Amazon <IconExternalLink />
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div className="w-full md:w-1/2 flex justify-center">
+                                                    <div className={`w-32 md:w-48 aspect-[2/3] ${livro.corFundo} rounded-sm shadow-xl p-2`}>
+                                                        <img src={livro.imagem} className="w-full h-full object-contain" alt={livro.titulo} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                            )}
                         </div>
                     </main>
 
                     <section id="sobre" className="max-w-3xl mx-auto px-6 py-32 text-center">
-                        <h2 className="text-3xl font-serif mb-8 text-stone-800 uppercase">O Autor</h2>
-                        <p className="text-stone-600 leading-loose text-lg font-light">
-                            André M. Fernandes dedica a sua escrita à exploração de temas contemporâneos que cruzam a filosofia e a ciência...
-                        </p>
+                        <h2 className="text-3xl font-serif mb-12 text-stone-800 uppercase">O Autor</h2>
+                        <div className="text-stone-600 leading-loose space-y-8 text-lg font-light text-justify">
+                            <p>André M. Fernandes dedica a sua escrita à exploração de temas contemporâneos que cruzam a filosofia e a ciência com a experiência humana mais crua...</p>
+                            <p>Desde Amor Meu em 2017, o seu percurso tem sido pautado pela procura da qualidade literária...</p>
+                        </div>
                     </section>
+
+                    <footer id="contacto" className="bg-stone-900 text-stone-400 py-24 px-6">
+                        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-16">
+                            <div className="text-center md:text-left">
+                                <h2 className="text-white text-2xl font-serif mb-4">Mantém o contacto</h2>
+                                <p className="max-w-xs mb-8 text-sm">Subscreve para receberes notícias sobre novos lançamentos diretamente no teu correio eletrónico.</p>
+                            </div>
+                            <div className="w-full max-w-sm">
+                                <form onSubmit={(e) => {e.preventDefault(); setSubscribed(true);}} className="flex flex-col gap-3">
+                                    <input type="email" placeholder="Endereço de correio eletrónico" required className="bg-stone-800 border border-stone-700 rounded-lg px-5 py-4 text-sm text-white outline-none" />
+                                    <button className="bg-stone-50 text-stone-900 px-6 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white transition-all">Subscrever Novidades</button>
+                                </form>
+                                {subscribed && <p className="text-emerald-500 text-[10px] uppercase mt-4 text-center">Subscrição simulada com sucesso!</p>}
+                            </div>
+                        </div>
+                        <div className="mt-24 text-[10px] text-center uppercase tracking-[0.3em] opacity-40">© 2026 André M. Fernandes</div>
+                    </footer>
                 </div>
             );
         };
