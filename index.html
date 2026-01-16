@@ -28,14 +28,15 @@
 
         const App = () => {
             const [viewMode, setViewMode] = useState("grid");
-            const [subscribed, setSubscribed] = useState(false);
-            
             const [meusLivros] = useState([
-                { id: 1, titulo: "A Última Simetria", ano: "2026", genero: "Ficção Científica", corFundo: "bg-stone-200", imagem: "https://m.media-amazon.com/images/P/B0G7RRHJZV.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B0G7RRHJZV", descricao: "G acredita que curou a humanidade do seu maior defeito, o livre arbítrio, do topo do Encephalon, a sua fortaleza de vidro e ouro, ele vigia um mundo onde a obediência é absoluta e o silêncio é lei. Para ele, a simetria é a única forma de justiça e o caos é uma doença que foi erradicada. Mas nas fundações da torre, a quilómetros de profundidade, a terra começa a reclamar o que é seu. Um batimento cardíaco, surdo e colossal, faz tremer a estrutura imaculada do seu reinado. Não é uma falha técnica, é o despertar de uma força antiga que a ciência não consegue explicar e que a magia não consegue calar. À medida que o vidro estala e as sombras se alongam, G descobre o horror da sua verdadeira posição: ele nunca foi o arquiteto do destino, foi apenas o carcereiro de algo que está prestes a quebrar as correntes." },
-                { id: 2, titulo: "A Mentira Sagrada", ano: "2025", genero: "Thriller", corFundo: "bg-stone-300", imagem: "https://m.media-amazon.com/images/P/B0F4BS4K7W.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B0F4BS4K7W", descricao: "Prepara-te para desafiar tudo o que acreditas sobre a história e a fé. A Mentira Sagrada é um percurso profundo que desafia o que tomamos como verdade sobre a espiritualidade e a história da humanidade. Nesta história cativante, André M. Fernandes transporta-nos para uma aldeia onde tradições antigas moldam vidas e anseios universais. Ao seguir a busca de uma personagem pelo sentido da sua existência, o autor guia-nos por um labirinto de emoções e inquietações, explorando as relações humanas e o confronto eterno entre crenças e realidade. Com uma escrita rica e envolvente, A Mentira Sagrada convida-nos a refletir profundamente sobre o que acreditamos e sentimos. Descobre novas perspetivas sobre a figura de Jesus, os mistérios do mundo e os enigmas que envolvem a história mais antiga da humanidade." },
+                { id: 1, titulo: "A Última Simetria", ano: "2026", genero: "Ficção Científica, Mistério", corFundo: "bg-stone-200", imagem: "https://m.media-amazon.com/images/P/B0G7RRHJZV.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B0G7RRHJZV", descricao: "G acredita que curou a humanidade do seu maior defeito, o livre arbítrio, do topo do Encephalon, a sua fortaleza de vidro e ouro, ele vigia um mundo onde a obediência é absoluta e o silêncio é lei. Para ele, a simetria é a única forma de justiça e o caos é uma doença que foi erradicada. Mas nas fundações da torre, a quilómetros de profundidade, a terra começa a reclamar o que é seu. Um batimento cardíaco, surdo e colossal, faz tremer a estrutura imaculada do seu reinado. Não é uma falha técnica, é o despertar de uma força antiga que a ciência não consegue explicar e que a magia não consegue calar. À medida que o vidro estala e as sombras se alongam, G descobre o horror da sua verdadeira posição: ele nunca foi o arquiteto do destino, foi apenas o carcereiro de algo que está prestes a quebrar as correntes." },
+                { id: 2, titulo: "A Mentira Sagrada", ano: "2025", genero: "Thriller, Mistério", corFundo: "bg-stone-300", imagem: "https://m.media-amazon.com/images/P/B0F4BS4K7W.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B0F4BS4K7W", descricao: "Prepara-te para desafiar tudo o que acreditas sobre a história e a fé. A Mentira Sagrada é um percurso profundo que desafia o que tomamos como verdade sobre a espiritualidade e a história da humanidade. Nesta história cativante, André M. Fernandes transporta-nos para uma aldeia onde tradições antigas moldam vidas e anseios universais. Ao seguir a busca de uma personagem pelo sentido da sua existência, o autor guia-nos por um labirinto de emoções e inquietações, explorando as relações humanas e o confronto eterno entre crenças e realidade. Com uma escrita rica e envolvente, A Mentira Sagrada convida-nos a refletir profundamente sobre o que acreditamos e sentimos. Descobre novas perspetivas sobre a figura de Jesus, os mistérios do mundo e os enigmas que envolvem a história mais antiga da humanidade. Este livro celebra a liberdade de pensar e sentir, desafiando-nos a abrir a mente para novas formas de ver e compreender." },
                 { id: 3, titulo: "Plano B", ano: "2021", genero: "Ficção, Suspense", corFundo: "bg-stone-400", imagem: "https://m.media-amazon.com/images/P/B09KQD5Y8W.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B09KQD5Y8W", descricao: "O início e o fim de uma civilização, um passado e um futuro, com um segredo obscuro que envolve limites religiosos e divinos. Recum tem a sua última missão marcada para terraformar o planeta Terra, mas mesmo antes de partir, os seus pais retornam ao seu planeta de origem com um segredo obscuro, assim como uma missão em troca da corrente. Essa missão irá alterar o curso da história daquela civilização e provocar o início de outra. Recum terá de optar por diversas vezes e as suas respostas ditarão o futuro da sua sociedade, assim como da sua família. Nem tudo é o que parece, mas ele é o plano B da civilização em risco de extinção." },
                 { id: 4, titulo: "Segunda Oportunidade", ano: "2018", genero: "Ficção, Drama", corFundo: "bg-stone-100", imagem: "https://m.media-amazon.com/images/P/B07C4Y78QW.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B07C4Y78QW", descricao: "Tudo começa quando o jovem Eros regressa à sua cidade natal com o intuito de repensar e rever certas pessoas referente a um crime terrível cometido no passado, no entanto, alguém já o seguia e estava disposta a o ajudar de forma a perceber que nem tudo aquilo que parece, é." },
-                { id: 5, titulo: "Orbis Terrarum Abyssus", ano: "2018", genero: "Ficção, Mistério", corFundo: "bg-stone-700", imagem: "https://m.media-amazon.com/images/P/B07C4RLCCL.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B07C4RLCCL", descricao: "Orbis Terrarum Abyssus é focado na história de um velhote com o seu propósito de tentar tornar este inferno num lugar melhor, procurando igualmente a sua redenção de todas as atrocidades praticadas enquanto foi vivo. Todos os seres pecadores de grande delito que morrem vão para Orbis Terrarum Abyssus pagar pelo preço que outrora em vida fizeram os outros sofrer. Abner, o velhote, irá descobrir um motivo para a redenção ou o fim das regras?" }
+                { id: 5, titulo: "Orbis Terrarum Abyssus", ano: "2018", genero: "Ficção, Mistério", corFundo: "bg-stone-700", imagem: "https://m.media-amazon.com/images/P/B07C4RLCCL.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B07C4RLCCL", descricao: "Orbis Terrarum Abyssus é focado na história de um velhote com o seu propósito de tentar tornar este inferno num lugar melhor, procurando igualmente a sua redenção de todas as atrocidades praticadas enquanto foi vivo. Todos os seres pecadores de grande delito que morrem vão para Orbis Terrarum Abyssus pagar pelo preço que outrora em vida fizeram os outros sofrer. Abner, o velhote, irá descobrir um motivo para a redenção ou o fim das regras?" },
+                { id: 6, titulo: "Na Luz do Horizonte", ano: "2018", genero: "Ficção Contemporânea", corFundo: "bg-stone-500", imagem: "https://m.media-amazon.com/images/P/B07DRBJFT7.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B07DRBJFT7", descricao: "Não aconselhado a pessoas preconceituosas. As leis aqui são todas quebradas. Todos nós nascemos um dia, todos nós iremos morrer um dia, mas nada disso importa se não for para valer a pena, principalmente, quando a nossa alma vale a pena. Packa é uma rapariga que foi obrigada não só a crescer com a dura e triste realidade, mas a tentar de tudo para se adaptar às tentações do lado obscuro da religião. O seu lado físico é destruído, mas a sua maior força, o seu espírito, inquestionável." },
+                { id: 7, titulo: "Inocente", ano: "2018", genero: "Suspense, Mistério", corFundo: "bg-stone-600", imagem: "https://m.media-amazon.com/images/P/B078Y8ZSP6.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B078Y8ZSP6", descricao: "Este livro é baseado numa rapariga que conheci nos meus tempos de escola, da qual fui somente um mero observador, e através das notícias entre colegas e desabafos dela mesma, deduzi aquilo que todos deduzíamos. No entanto, sendo baseado, não significa necessariamente a sua história integral e real, é somente uma base para uma história, um livro." },
+                { id: 8, titulo: "Amor Meu", ano: "2017", genero: "Ficção, Romance", corFundo: "bg-stone-300", imagem: "https://m.media-amazon.com/images/P/B077FLBYZH.01.LZZZZZZZ.jpg", ligacao: "https://www.amazon.es/dp/B077FLBYZH", descricao: "Este livro é um romance baseado na história de dois jovens que descobrem o amor da sua vida, provavelmente cedo demais, no entanto, em circunstâncias difíceis, como a distância e a saudade vão criar muitos obstáculos. Por vezes o amor bate à porta, mas é cedo demais para o compreendermos, no entanto, quando é amor será que importa algo mais." }
             ]);
 
             const scrollToSection = (id) => {
@@ -44,13 +45,13 @@
             };
 
             return (
-                <div className="min-h-screen flex flex-col">
-                    <nav className="max-w-6xl mx-auto w-full px-6 py-8 flex justify-between items-center">
+                <div className="min-h-screen">
+                    <nav className="max-w-6xl mx-auto px-6 py-8 flex justify-between items-center">
                         <span className="text-xl font-serif font-bold italic text-stone-800 uppercase">André M. Fernandes</span>
                         <div className="flex gap-8 text-xs font-bold uppercase tracking-widest text-stone-500">
-                            <button onClick={() => scrollToSection("livros")} className="hover:text-stone-900">Livros</button>
-                            <button onClick={() => scrollToSection("sobre")} className="hover:text-stone-900">Sobre</button>
-                            <button onClick={() => scrollToSection("contacto")} className="hover:text-stone-900">Contacto</button>
+                            <button onClick={() => scrollToSection("livros")} className="hover:text-stone-900 uppercase">Livros</button>
+                            <button onClick={() => scrollToSection("sobre")} className="hover:text-stone-900 uppercase">Sobre</button>
+                            <button onClick={() => scrollToSection("contacto")} className="hover:text-stone-900 uppercase">Contacto</button>
                         </div>
                     </nav>
 
@@ -60,7 +61,7 @@
                             Escrita que desafia <br />
                             <span className="italic text-stone-600">as fronteiras da mente.</span>
                         </h1>
-                        <button onClick={() => scrollToSection("livros")} className="bg-stone-900 text-white px-8 py-4 rounded-full inline-flex items-center gap-2 font-bold uppercase text-[10px] tracking-widest shadow-lg">
+                        <button onClick={() => scrollToSection("livros")} className="bg-stone-900 text-white px-8 py-4 rounded-full inline-flex items-center gap-2 hover:bg-stone-800 transition-all font-bold uppercase text-[10px] tracking-widest">
                             Explorar Obras <IconChevronRight />
                         </button>
                     </header>
@@ -70,28 +71,24 @@
                             <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-6">
                                 <h2 className="text-3xl font-serif text-stone-800 border-l-4 border-stone-800 pl-6">Obras Publicadas</h2>
                                 <div className="flex bg-white rounded-full p-1 shadow-sm border border-stone-200">
-                                    <button onClick={() => setViewMode("grid")} className={`px-6 py-2 rounded-full text-[10px] font-bold uppercase flex items-center gap-2 ${viewMode === "grid" ? "bg-stone-900 text-white" : "text-stone-400"}`}>
-                                        <IconLayoutGrid /> Grelha
-                                    </button>
-                                    <button onClick={() => setViewMode("timeline")} className={`px-6 py-2 rounded-full text-[10px] font-bold uppercase flex items-center gap-2 ${viewMode === "timeline" ? "bg-stone-900 text-white" : "text-stone-400"}`}>
-                                        <IconListTree /> Cronologia
-                                    </button>
+                                    <button onClick={() => setViewMode("grid")} className={`flex items-center gap-2 px-6 py-2 rounded-full text-[10px] font-bold uppercase transition-all ${viewMode === "grid" ? "bg-stone-900 text-white" : "text-stone-400"}`}><IconLayoutGrid /> Grelha</button>
+                                    <button onClick={() => setViewMode("timeline")} className={`flex items-center gap-2 px-6 py-2 rounded-full text-[10px] font-bold uppercase transition-all ${viewMode === "timeline" ? "bg-stone-900 text-white" : "text-stone-400"}`}><IconListTree /> Cronologia</button>
                                 </div>
                             </div>
                             
                             {viewMode === "grid" ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-24">
                                     {meusLivros.map((livro) => (
-                                        <div key={livro.id} className="flex flex-col">
-                                            <div className={`aspect-[2/3] w-full max-w-[350px] ${livro.corFundo} mb-8 rounded shadow-2xl flex items-center justify-center p-4 mx-auto md:mx-0`}>
-                                                <img src={livro.imagem} className="max-h-full object-contain shadow-md" alt={livro.titulo} />
+                                        <div key={livro.id} className="group flex flex-col">
+                                            <div className={`aspect-[2/3] w-full max-w-[350px] ${livro.corFundo} mb-8 rounded-sm shadow-2xl flex items-center justify-center p-4 transition-all group-hover:scale-[1.01]`}>
+                                                <img src={livro.imagem} alt={livro.titulo} className="max-h-full max-w-full object-contain shadow-md" />
                                             </div>
                                             <div className="border-b border-stone-200 pb-2 mb-4">
-                                                <h3 className="text-2xl font-serif text-stone-800">{livro.titulo}</h3>
-                                                <span className="text-stone-400 text-xs font-bold tracking-widest uppercase">{livro.ano} — {livro.genero}</span>
+                                                <h3 className="text-2xl font-serif text-stone-800 leading-none">{livro.titulo}</h3>
+                                                <span className="text-stone-400 text-sm font-bold tracking-widest">{livro.ano}</span>
                                             </div>
-                                            <p className="text-stone-600 text-sm leading-relaxed mb-6 text-justify">{livro.descricao}</p>
-                                            <a href={livro.ligacao} target="_blank" className="bg-stone-900 text-white px-8 py-3 rounded-full text-[10px] uppercase font-bold inline-flex items-center gap-2 w-fit">Comprar na Amazon <IconShoppingCart /></a>
+                                            <p className="text-stone-600 leading-relaxed text-sm mb-6 text-justify">{livro.descricao}</p>
+                                            <a href={livro.ligacao} target="_blank" className="inline-flex items-center gap-3 bg-stone-900 text-stone-50 px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-stone-700 transition-all no-underline shadow-md">Comprar na Amazon <IconShoppingCart /></a>
                                         </div>
                                     ))}
                                 </div>
@@ -103,17 +100,15 @@
                                             <div key={livro.id} className={`relative flex flex-col md:flex-row items-center gap-8 ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}>
                                                 <div className="absolute left-4 md:left-1/2 w-3 h-3 bg-stone-900 rounded-full border-4 border-[#fcfaf7] transform md:-translate-x-1/2 z-10"></div>
                                                 <div className="w-full md:w-1/2 pl-12 md:pl-0">
-                                                    <div className="p-8 bg-white rounded-2xl shadow-sm border border-stone-200">
+                                                    <div className={`p-8 bg-white rounded-2xl shadow-sm border border-stone-200 ${index % 2 === 0 ? "md:mr-10" : "md:ml-10"}`}>
                                                         <span className="text-3xl font-serif font-bold text-stone-200">{livro.ano}</span>
                                                         <h3 className="text-2xl font-serif text-stone-800 mb-4">{livro.titulo}</h3>
-                                                        <p className="text-stone-600 text-sm italic mb-6 text-justify">{livro.descricao}</p>
+                                                        <p className="text-stone-600 text-sm leading-relaxed mb-6 italic">{livro.descricao}</p>
                                                         <a href={livro.ligacao} target="_blank" className="text-[10px] font-bold uppercase tracking-widest text-stone-900 flex items-center gap-2 no-underline">Ver na Amazon <IconExternalLink /></a>
                                                     </div>
                                                 </div>
                                                 <div className="w-full md:w-1/2 flex justify-center">
-                                                    <div className={`w-32 md:w-48 aspect-[2/3] ${livro.corFundo} rounded shadow-xl p-2`}>
-                                                        <img src={livro.imagem} className="w-full h-full object-contain" alt={livro.titulo} />
-                                                    </div>
+                                                    <div className={`w-32 md:w-48 aspect-[2/3] ${livro.corFundo} rounded-sm shadow-xl p-2`}><img src={livro.imagem} className="w-full h-full object-contain" /></div>
                                                 </div>
                                             </div>
                                         ))}
@@ -126,32 +121,25 @@
                     <section id="sobre" className="max-w-3xl mx-auto px-6 py-32 text-center">
                         <h2 className="text-3xl font-serif mb-12 text-stone-800 uppercase">O Autor</h2>
                         <div className="text-stone-600 leading-loose space-y-8 text-lg font-light text-justify">
-                            <p>André M. Fernandes dedica a sua escrita à exploração de temas contemporâneos que cruzam a filosofia e a ciência com a experiência humana mais crua, com um estilo que privilegia a atmosfera e a precisão da linguagem.</p>
-                            <p>Desde Amor Meu em 2017, o seu percurso tem sido pautado pela procura da qualidade literária e pela criação de universos que permanecem com o leitor muito depois da última página ser lida.</p>
+                            <p>André M. Fernandes dedica a sua escrita à exploração de temas contemporâneos...</p>
+                            <p>Desde Amor Meu em 2017, o seu percurso tem sido pautado pela procura da qualidade literária...</p>
                         </div>
                     </section>
 
-                    <footer id="contacto" className="bg-stone-900 text-stone-400 py-24 px-6 mt-auto">
+                    <footer id="contacto" className="bg-stone-900 text-stone-400 py-24 px-6">
                         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-16">
                             <div className="text-center md:text-left">
                                 <h2 className="text-white text-2xl font-serif mb-4">Mantém o contacto</h2>
-                                <p className="max-w-xs mb-8 text-sm">Subscreve para receberes notícias sobre novos lançamentos diretamente no teu correio eletrónico.</p>
-                                <div className="flex gap-6 justify-center md:justify-start">
-                                    <span className="text-xs font-bold uppercase tracking-widest hover:text-white cursor-pointer transition-colors">Instagram</span>
-                                    <span className="text-xs font-bold uppercase tracking-widest hover:text-white cursor-pointer transition-colors">E-mail</span>
-                                </div>
+                                <p className="max-w-xs mb-8 text-sm">Subscreve para receberes notícias sobre novos lançamentos.</p>
                             </div>
                             <div className="w-full max-w-sm">
-                                {subscribed ? (
-                                    <p className="text-emerald-500 font-bold uppercase text-xs text-center border border-emerald-500/30 p-6 rounded">Subscrição registada!</p>
-                                ) : (
-                                    <form onSubmit={(e) => {e.preventDefault(); setSubscribed(true);}} className="flex flex-col gap-3">
-                                        <input type="email" placeholder="Endereço de e-mail" required className="bg-stone-800 border border-stone-700 rounded px-5 py-4 text-sm text-white outline-none focus:border-stone-500" />
-                                        <button className="bg-stone-50 text-stone-900 px-6 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white transition-all">Subscrever</button>
-                                    </form>
-                                )}
+                                <form className="flex flex-col gap-3">
+                                    <input type="email" placeholder="Endereço de correio eletrónico" className="bg-stone-800 border border-stone-700 rounded-lg px-5 py-4 text-sm text-white outline-none" />
+                                    <button type="button" className="bg-stone-50 text-stone-900 px-6 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white transition-all">Subscrever Novidades</button>
+                                </form>
                             </div>
                         </div>
+                        <div className="mt-24 text-[10px] text-center uppercase tracking-[0.3em] opacity-40">© 2026 André M. Fernandes</div>
                     </footer>
                 </div>
             );
