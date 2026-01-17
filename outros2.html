@@ -1,0 +1,233 @@
+import React, { useState, useEffect } from "react"
+
+/**
+ * Estúdio de Drama - Versão Interativa
+ * Criado para Xtvback.
+ * Agora permite ajustar a agressividade da história de cada personagem.
+ */
+const App = () => {
+  const [characters, setCharacters] = useState([])
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [selectedType, setSelectedType] = useState("aleatório")
+  const [activeCharId, setActiveCharId] = useState(null)
+  const [isRewriting, setIsRewriting] = useState(null)
+  const [error, setError] = useState(null)
+  
+  const apiKey = ""
+
+  const categories = [
+    { id: "aleatório", label: "Aleatório" },
+    { id: "homem", label: "Homem" },
+    { id: "mulher", label: "Mulher" },
+    { id: "criança", label: "Criança" }
+  ]
+
+  const callGemini = async (prompt, systemInstruction, retryCount = 0) => {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`
+    
+    const payload = {
+      contents: [{ parts: [{ text: prompt }] }],
+      systemInstruction: { parts: [{ text: systemInstruction }] },
+      generationConfig: { 
+        responseMimeType: "application/json"
+      }
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+
+      if (!response.ok) throw new Error("Erro na comunicação")
+      const result = await response.json()
+      return JSON.parse(result.candidates[0].content.parts[0].text)
+    } catch (err) {
+      if (retryCount < 5) {
+        const delays = [1000, 2000, 4000, 8000, 16000]
+        await new Promise(res => setTimeout(res, delays[retryCount]))
+        return callGemini(prompt, systemInstruction, retryCount + 1)
+      }
+      throw err
+    }
+  }
+
+  const generateImage = async (charData, category, retryCount = 0) => {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`
+    let subject = `${charData.idade} year old ${charData.ocupacao}`
+    if (category === "criança") subject = `${charData.idade} year old child`
+    
+    const fullPrompt = `Cinematic close-up portrait of a ${subject}, realistic lighting, drama movie aesthetic, shallow depth of field, high resolution photography, expressive face, evocative atmosphere.`
+    
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          instances: [{ prompt: fullPrompt }],
+          parameters: { sampleCount: 1 }
+        })
+      })
+
+      if (!response.ok) throw new Error("Erro na imagem")
+      const result = await response.json()
+      return `data:image/png;base64,${result.predictions[0].bytesBase64Encoded}`
+    } catch (err) {
+      if (retryCount < 5) {
+        const delays = [1000, 2000, 4000, 8000, 16000]
+        await new Promise(res => setTimeout(res, delays[retryCount]))
+        return generateImage(charData, category, retryCount + 1)
+      }
+      throw err
+    }
+  }
+
+  const createNewCharacter = async () => {
+    setIsGenerating(true)
+    setError(null)
+    try {
+      let specificInstruction = "Gera uma personagem de drama contemporâneo."
+      if (selectedType === "homem") specificInstruction = "Gera uma personagem masculina adulta para um drama."
+      if (selectedType === "mulher") specificInstruction = "Gera uma personagem feminina adulta para um drama."
+      if (selectedType === "criança") specificInstruction = "Gera uma criança (entre 6 e 12 anos) para um drama."
+
+      const system = "Tu és um argumentista em Portugal. Devolve um objeto JSON com: nome, idade, ocupacao, empatia, ambicao, resiliencia, historia. A história deve ter no máximo duas frases, sem aspas nem pontos e vírgula."
+      
+      const charData = await callGemini(specificInstruction, system)
+      const imageUrl = await generateImage(charData, selectedType)
+      
+      const newChar = { ...charData, id: Date.now(), image: imageUrl, type: selectedType }
+      setCharacters(prev => [newChar, ...prev])
+    } catch (err) {
+      setError("Não foi possível criar a personagem agora.")
+    } finally {
+      setIsGenerating(false)
+    }
+  }
+
+  const adjustAggression = async (id, currentStory, direction) => {
+    setIsRewriting(id)
+    try {
+      const instruction = direction === "mais" 
+        ? `Torna esta história de drama muito mais agressiva, tensa e conflituosa: ${currentStory}`
+        : `Torna esta história de drama muito menos agressiva, mais calma e reconciliadora: ${currentStory}`
+      
+      const system = "Devolve apenas um objeto JSON com a chave historia contendo a nova versão da história em português europeu, no máximo duas frases, sem aspas nem pontos e vírgula."
+      
+      const result = await callGemini(instruction, system)
+      
+      setCharacters(prev => prev.map(c => 
+        c.id === id ? { ...c, historia: result.historia } : c
+      ))
+    } catch (err) {
+      setError("Erro ao ajustar o tom da história.")
+    } finally {
+      setIsRewriting(null)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-zinc-50 text-zinc-900 p-4 md:p-12">
+      <div className="max-w-6xl mx-auto">
+        <header className="flex flex-col items-center mb-16 text-center">
+          <h1 className="text-5xl md:text-6xl font-light tracking-tighter mb-4">Estúdio de Drama</h1>
+          <p className="text-zinc-500 text-lg mb-8">Cria e molda a intensidade das tuas personagens.</p>
+          
+          <div className="flex flex-col gap-6 items-center w-full">
+            <div className="flex flex-wrap justify-center gap-2 p-1.5 bg-zinc-200/50 rounded-2xl w-fit">
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedType(cat.id)}
+                  className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                    selectedType === cat.id 
+                      ? "bg-white text-zinc-900 shadow-sm" 
+                      : "text-zinc-500 hover:text-zinc-700"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={createNewCharacter}
+              disabled={isGenerating}
+              className="bg-zinc-900 hover:bg-black text-white font-medium py-4 px-12 rounded-full shadow-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center gap-3 text-lg"
+            >
+              {isGenerating ? "A compor..." : "Dar vida à personagem"}
+            </button>
+          </div>
+        </header>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {characters.map((char) => (
+            <div 
+              key={char.id} 
+              onClick={() => setActiveCharId(activeCharId === char.id ? null : char.id)}
+              className={`bg-white rounded-[2.5rem] overflow-hidden shadow-xl border transition-all cursor-pointer ${
+                activeCharId === char.id ? "ring-2 ring-zinc-900 scale-[1.02]" : "border-zinc-100 hover:translate-y-[-4px]"
+              }`}
+            >
+              <div className="aspect-[4/5] bg-zinc-100 relative group">
+                <img src={char.image} alt={char.nome} className="w-full h-full object-cover" />
+                <div className="absolute top-6 right-6">
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); setCharacters(prev => prev.filter(c => c.id !== char.id)) }}
+                    className="bg-black/30 backdrop-blur-md text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-500"
+                  >
+                    ×
+                  </button>
+                </div>
+              </div>
+              
+              <div className="p-8">
+                <div className="mb-6">
+                  <h3 className="text-2xl font-bold text-zinc-800 leading-tight">{char.nome}</h3>
+                  <p className="text-zinc-400 text-sm mt-1">{char.idade} anos · {char.ocupacao}</p>
+                </div>
+
+                {activeCharId === char.id ? (
+                  <div className="mb-6 animate-in fade-in slide-in-from-top-2">
+                    <p className="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-3">Ajustar Agressividade</p>
+                    <div className="flex gap-2">
+                      <button
+                        disabled={isRewriting === char.id}
+                        onClick={(e) => { e.stopPropagation(); adjustAggression(char.id, char.historia, "menos") }}
+                        className="flex-1 py-2 rounded-xl border border-zinc-200 text-xs font-bold hover:bg-zinc-50 disabled:opacity-50"
+                      >
+                        {isRewriting === char.id ? "..." : "Menos"}
+                      </button>
+                      <button
+                        disabled={isRewriting === char.id}
+                        onClick={(e) => { e.stopPropagation(); adjustAggression(char.id, char.historia, "mais") }}
+                        className="flex-1 py-2 rounded-xl bg-zinc-900 text-white text-xs font-bold hover:bg-black disabled:opacity-50"
+                      >
+                        {isRewriting === char.id ? "..." : "Mais"}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-4 mb-8">
+                    <div className="h-1 w-full bg-zinc-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-zinc-800" style={{ width: `${char.resiliencia * 10}%` }}></div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="pt-6 border-t border-zinc-50">
+                  <p className="text-zinc-600 text-[15px] leading-relaxed font-serif italic">
+                    {char.historia}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default App
