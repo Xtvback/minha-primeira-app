@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111b32">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Noite">
+<title>Checklist da Noite</title>
+<style>
+:root{color-scheme:dark;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0b1222;color:#f5f7ff}
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at top,#25365e 0,#111b32 44%,#0b1222 100%);padding:env(safe-area-inset-top) 18px env(safe-area-inset-bottom)}
+main{max-width:520px;margin:0 auto;padding:42px 0 60px}
+.eyebrow{font-size:13px;letter-spacing:.13em;text-transform:uppercase;color:#a9bcdf;font-weight:750}
+h1{font-size:clamp(31px,8vw,42px);line-height:1.12;margin:12px 0 10px;letter-spacing:-.045em}
+.sub{color:#bec9de;font-size:15px;line-height:1.5;margin:0 0 28px}
+.panel{border:1px solid #ffffff22;background:#ffffff0e;border-radius:24px;padding:22px 18px;box-shadow:0 16px 45px #0002}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}.top strong{font-size:17px}.count{font-variant-numeric:tabular-nums;color:#a9bcdf;font-weight:700}
+.track{background:#ffffff20;border-radius:99px;height:9px;margin:16px 0 22px;overflow:hidden}.fill{height:100%;width:0;background:#74dfad;transition:width .2s ease;border-radius:99px}
+.tasks{display:grid;gap:11px}.task{display:flex;align-items:center;gap:14px;min-height:66px;border:1px solid #ffffff1b;background:#ffffff0c;border-radius:16px;padding:13px 15px;cursor:pointer;transition:background .2s}
+.task:has(input:checked){background:#1a483d70;border-color:#78e3b055}.task input{position:absolute;opacity:0;width:1px;height:1px}
+.check{display:grid;place-items:center;flex:none;border:2px solid #90a4c1;border-radius:8px;width:28px;height:28px;color:transparent;font-weight:900}
+.task input:checked+.check{background:#74dfad;border-color:#74dfad;color:#0c3026}
+.task input:focus-visible+.check{outline:3px solid #fff;outline-offset:3px}
+.task span:last-child{font-weight:550;font-size:16px;line-height:1.3}
+.task input:checked~span:last-child{color:#b7cabc;text-decoration:line-through;text-decoration-color:#8eaa9a}
+.actions{display:flex;gap:10px;margin-top:20px}.btn{border:1px solid #ffffff3a;color:#eff5ff;border-radius:13px;background:#ffffff13;padding:13px 16px;font:inherit;font-weight:650;cursor:pointer;width:100%}
+.btn:active{transform:scale(.98)}.complete{display:none;text-align:center;color:#91edbc;font-weight:700;margin:18px 0 0}.complete.show{display:block}
+footer{text-align:center;color:#97a9ca;font-size:13px;margin-top:25px;line-height:1.6}
+</style>
+</head>
+<body>
+<main>
+<div class="eyebrow">☾ &nbsp; A minha rotina</div>
+<h1>Checklist da noite</h1>
+<p class="sub">Só as tuas tarefas. Assinala à medida que vais preparando o dia de amanhã.</p>
+<section class="panel" aria-label="Tarefas da noite">
+<div class="top"><strong>Por fazer esta noite</strong><span class="count" id="count">0/5</span></div>
+<div class="track" role="progressbar" aria-label="Progresso" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" id="progress"><div class="fill" id="fill"></div></div>
+<div class="tasks" id="tasks"></div>
+<p class="complete" id="complete" role="status">✓ Tudo concluído! Boa noite.</p>
+<div class="actions"><button class="btn" id="reset" type="button">↻ Reiniciar checklist</button></div>
+</section>
+<footer>Os vistos ficam guardados neste dispositivo.<br>Para teres a app no iPhone: Safari → Partilhar → Adicionar ao ecrã principal.</footer>
+</main>
+<script>
+(() => {
+"use strict";
+const tasks=["Lanche dos miúdos","Leite com chocolate para amanhã de manhã","Roupa para amanhã","Calçado para amanhã","Lanches para amanhã"];
+const key="checklist-noite-v1";
+let done=[];
+try{const stored=JSON.parse(localStorage.getItem(key)||"[]");done=Array.isArray(stored)?stored.filter(x=>Number.isInteger(x)&&x>=0&&x<tasks.length):[]}catch{}
+const list=document.getElementById("tasks");
+const count=document.getElementById("count");
+const fill=document.getElementById("fill");
+const progress=document.getElementById("progress");
+const complete=document.getElementById("complete");
+function save(){try{localStorage.setItem(key,JSON.stringify(done))}catch{}}
+function update(){count.textContent=done.length+"/"+tasks.length;fill.style.width=(100*done.length/tasks.length)+"%";progress.setAttribute("aria-valuenow",done.length);complete.classList.toggle("show",done.length===tasks.length)}
+tasks.forEach((text,i)=>{const label=document.createElement("label");label.className="task";const input=document.createElement("input");input.type="checkbox";input.checked=done.includes(i);input.setAttribute("aria-label",text);const check=document.createElement("span");check.className="check";check.textContent="✓";check.setAttribute("aria-hidden","true");const span=document.createElement("span");span.textContent=text;label.append(input,check,span);input.addEventListener("change",()=>{done=input.checked?[...new Set([...done,i])]:done.filter(x=>x!==i);save();update()});list.append(label)});
+document.getElementById("reset").addEventListener("click",()=>{done=[];list.querySelectorAll("input").forEach(x=>x.checked=false);save();update()});
+update();
+})();
+</script>
+</body></html>
