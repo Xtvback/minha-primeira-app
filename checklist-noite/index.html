@@ -34,7 +34,7 @@ footer{text-align:center;color:#97a9ca;font-size:13px;margin-top:25px;line-heigh
 <main>
 <div class="eyebrow">☾ &nbsp; A minha rotina</div>
 <h1>Checklist da noite</h1>
-<p class="sub">Só as tuas tarefas. Assinala à medida que vais preparando o dia de amanhã.</p>
+<p class="sub">Todas as tarefas disponíveis em cada dia. Escolhe o separador e assinala apenas o que precisares.</p>
 <nav class="week-tabs" aria-label="Dias da semana" role="tablist" id="week-tabs"></nav>
 <section class="panel" aria-label="Tarefas da noite">
 <p class="day-note" id="day-note"></p>
@@ -52,8 +52,7 @@ footer{text-align:center;color:#97a9ca;font-size:13px;margin-top:25px;line-heigh
 const baseTasks=["Lanche dos miúdos","Leite com chocolate para amanhã de manhã","Roupa para amanhã","Calçado para amanhã","Lanches para amanhã"];
 const dayNames=["Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira"];
 const shortNames=["Seg","Ter","Qua","Qui","Sex"];
-const today=new Date().getDay();
-let selectedDay=today>=1&&today<=5?today-1:0;
+let selectedDay=0;
 const tabs=document.getElementById("week-tabs");
 const list=document.getElementById("tasks");
 const count=document.getElementById("count");
@@ -67,8 +66,8 @@ monday.setDate(monday.getDate()-((monday.getDay()+6)%7));
 const weekId=[monday.getFullYear(),String(monday.getMonth()+1).padStart(2,"0"),String(monday.getDate()).padStart(2,"0")].join("-");
 function tasksFor(day){
  const tasks=[...baseTasks];
- if(day===1)tasks.push("Preparar as coisas da natação da Carminho (quarta-feira)");
- if(day===2)tasks.push("Preparar as coisas de Educação Física da Mercedes (quinta-feira)");
+ tasks.push("Preparar as coisas da natação da Carminho (quarta-feira)");
+ tasks.push("Preparar as coisas de Educação Física da Mercedes (quinta-feira)");
  return tasks;
 }
 function storageKey(day){return "checklist-noite-v2-"+weekId+"-"+day}
@@ -91,7 +90,7 @@ function render(){
  });
  const tasks=tasksFor(selectedDay);
  let done=readDone(selectedDay);
- note.textContent=dayNames[selectedDay]+" à noite · Preparar o dia seguinte";
+ note.textContent=dayNames[selectedDay]+" · Escolhe as tarefas que queres fazer neste dia";
  list.replaceChildren();
  function save(){try{localStorage.setItem(storageKey(selectedDay),JSON.stringify(done))}catch{}}
  function update(){
