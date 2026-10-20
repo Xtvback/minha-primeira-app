@@ -29,7 +29,7 @@ h1{font-size:clamp(31px,8vw,42px);line-height:1.12;margin:12px 0 10px;letter-spa
 .task input:checked~span:last-child{color:#b7cabc;text-decoration:line-through;text-decoration-color:#8eaa9a}
 .actions{display:flex;gap:10px;margin-top:20px}.btn{border:1px solid #ffffff3a;color:#eff5ff;border-radius:13px;background:#ffffff13;padding:13px 16px;font:inherit;font-weight:650;cursor:pointer;width:100%}
 .btn:active{transform:scale(.98)}.complete{display:none;text-align:center;color:#91edbc;font-weight:700;margin:18px 0 0}.complete.show{display:block}
-.week-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:0 0 16px}.day-tab{border:1px solid #ffffff30;border-radius:12px;background:#ffffff0e;color:#c4d2ec;font:inherit;font-size:13px;font-weight:750;padding:12px 2px;cursor:pointer}.day-tab[aria-selected="true"]{background:#74dfad;color:#0b3026;border-color:#74dfad}.day-tab:focus-visible{outline:2px solid white;outline-offset:2px}.day-note{color:#bec9de;font-size:13px;margin:0 0 18px;line-height:1.4}
+.week-tabs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;margin:0 0 16px}.day-tab{border:1px solid #ffffff30;border-radius:12px;background:#ffffff0e;color:#c4d2ec;font:inherit;font-size:13px;font-weight:750;padding:12px 2px;cursor:pointer}.day-tab[aria-selected="true"]{background:#74dfad;color:#0b3026;border-color:#74dfad}.day-tab:focus-visible{outline:2px solid white;outline-offset:2px}.day-note{color:#bec9de;font-size:13px;margin:0 0 18px;line-height:1.4}
 .weather{border:1px solid #ffffff28;background:#162944;border-radius:16px;padding:14px 15px;margin:0 0 19px}.weather-title{font-weight:750;font-size:15px;margin:0 0 6px}.weather-text{font-size:14px;line-height:1.5;color:#d5e2f6;margin:0}.weather-location{font:inherit;font-size:12px;color:#9beac1;background:transparent;border:0;text-decoration:underline;padding:8px 0 0;cursor:pointer}.weather-small{font-size:12px;color:#aabbd7;margin-top:6px}
 footer{text-align:center;color:#97a9ca;font-size:13px;margin-top:25px;line-height:1.6}
 </style>
@@ -38,7 +38,7 @@ footer{text-align:center;color:#97a9ca;font-size:13px;margin-top:25px;line-heigh
 <main>
 <div class="eyebrow">☾ &nbsp; A minha rotina</div>
 <h1>Checklist da noite</h1>
-<p class="sub">Todas as tarefas disponíveis em cada dia. Escolhe o separador e assinala apenas o que precisares.</p>
+<p class="sub">Todas as tarefas disponíveis em cada dia. Escolhe o separador (domingo a sexta) e assinala apenas o que precisares.</p>
 <nav class="week-tabs" aria-label="Dias da semana" role="tablist" id="week-tabs"></nav>
 <section class="panel" aria-label="Tarefas da noite">
 <p class="day-note" id="day-note"></p>
@@ -56,8 +56,8 @@ footer{text-align:center;color:#97a9ca;font-size:13px;margin-top:25px;line-heigh
 "use strict";
 const baseTasks=["Lanche dos miúdos (1 fruta, bolachas e 1 bolo)","Leite com chocolate para amanhã de manhã","Roupa para amanhã","Calçado para amanhã","Lanches para amanhã"];
 // Tarefas especiais apenas na noite anterior à atividade.
-const dayNames=["Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira"];
-const shortNames=["Seg","Ter","Qua","Qui","Sex"];
+const dayNames=["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira"];
+const shortNames=["Dom","Seg","Ter","Qua","Qui","Sex"];
 let selectedDay=0;
 const tabs=document.getElementById("week-tabs");
 const list=document.getElementById("tasks");
@@ -73,7 +73,7 @@ let weatherRequest=0;
 function localISO(date){return [date.getFullYear(),String(date.getMonth()+1).padStart(2,"0"),String(date.getDate()).padStart(2,"0")].join("-")}
 async function loadWeather(){
  const request=++weatherRequest;
- const date=new Date(monday);date.setDate(monday.getDate()+selectedDay+1);
+ const date=new Date(monday);date.setDate(monday.getDate()+selectedDay);
  const dateStr=localISO(date);
  const todayStr=localISO(new Date());
  weatherSource.textContent="Previsão para "+weatherCoords.label+" · Fonte: Open-Meteo";
@@ -109,8 +109,10 @@ monday.setDate(monday.getDate()-((monday.getDay()+6)%7));
 const weekId=[monday.getFullYear(),String(monday.getMonth()+1).padStart(2,"0"),String(monday.getDate()).padStart(2,"0")].join("-");
 function tasksFor(day){
  const tasks=[...baseTasks];
- if(day===1)tasks.push("Preparar as coisas da natação da Carminho (quarta-feira)");
- if(day===2)tasks.push("Preparar as coisas de Educação Física da Mercedes (quinta-feira)");
+ if(day===0)tasks.push("Preparar equipamento de desporto do Lourenço (segunda-feira)");
+ if(day===2){tasks.push("Preparar as coisas da natação da Carminho (quarta-feira)");tasks.push("Preparar equipamento de desporto do Lourenço (quarta-feira)")}
+ if(day===3){tasks.push("Preparar as coisas de Educação Física da Mercedes (quinta-feira)");tasks.push("Preparar equipamento de desporto do Lourenço (quinta-feira)")}
+ if(day===4)tasks.push("Preparar equipamento de desporto do Lourenço (sexta-feira)");
  return tasks;
 }
 function storageKey(day){return "checklist-noite-v2-"+weekId+"-"+day}
