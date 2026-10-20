@@ -73,6 +73,9 @@ let weatherRequest=0;
 function localISO(date){return [date.getFullYear(),String(date.getMonth()+1).padStart(2,"0"),String(date.getDate()).padStart(2,"0")].join("-")}
 async function loadWeather(){
  const request=++weatherRequest;
+ const weatherCard=document.getElementById("weather-text").closest("section") || document.getElementById("weather-text").parentElement;
+ weatherCard.style.display=selectedDay===5?"none":"";
+ if(selectedDay===5)return;
  const date=new Date(monday);date.setDate(monday.getDate()+selectedDay);
  const dateStr=localISO(date);
  const todayStr=localISO(new Date());
