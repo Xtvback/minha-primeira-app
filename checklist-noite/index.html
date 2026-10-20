@@ -30,6 +30,7 @@ h1{font-size:clamp(31px,8vw,42px);line-height:1.12;margin:12px 0 10px;letter-spa
 .actions{display:flex;gap:10px;margin-top:20px}.btn{border:1px solid #ffffff3a;color:#eff5ff;border-radius:13px;background:#ffffff13;padding:13px 16px;font:inherit;font-weight:650;cursor:pointer;width:100%}
 .btn:active{transform:scale(.98)}.complete{display:none;text-align:center;color:#91edbc;font-weight:700;margin:18px 0 0}.complete.show{display:block}
 .week-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:0 0 16px}.day-tab{border:1px solid #ffffff30;border-radius:12px;background:#ffffff0e;color:#c4d2ec;font:inherit;font-size:13px;font-weight:750;padding:12px 2px;cursor:pointer}.day-tab[aria-selected="true"]{background:#74dfad;color:#0b3026;border-color:#74dfad}.day-tab:focus-visible{outline:2px solid white;outline-offset:2px}.day-note{color:#bec9de;font-size:13px;margin:0 0 18px;line-height:1.4}
+.weather{border:1px solid #ffffff28;background:#162944;border-radius:16px;padding:14px 15px;margin:0 0 19px}.weather-title{font-weight:750;font-size:15px;margin:0 0 6px}.weather-text{font-size:14px;line-height:1.5;color:#d5e2f6;margin:0}.weather-location{font:inherit;font-size:12px;color:#9beac1;background:transparent;border:0;text-decoration:underline;padding:8px 0 0;cursor:pointer}.weather-small{font-size:12px;color:#aabbd7;margin-top:6px}
 footer{text-align:center;color:#97a9ca;font-size:13px;margin-top:25px;line-height:1.6}
 </style>
 </head>
@@ -41,6 +42,7 @@ footer{text-align:center;color:#97a9ca;font-size:13px;margin-top:25px;line-heigh
 <nav class="week-tabs" aria-label="Dias da semana" role="tablist" id="week-tabs"></nav>
 <section class="panel" aria-label="Tarefas da noite">
 <p class="day-note" id="day-note"></p>
+<div class="weather" aria-live="polite"><p class="weather-title">🌡️ Roupa para o dia seguinte</p><p class="weather-text" id="weather-text">A consultar previsão…</p><div class="weather-small" id="weather-source">Previsão para Lisboa</div><button class="weather-location" type="button" id="weather-location">Usar a minha localização</button></div>
 <div class="top"><strong>Por fazer esta noite</strong><span class="count" id="count">0/5</span></div>
 <div class="track" role="progressbar" aria-label="Progresso" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" id="progress"><div class="fill" id="fill"></div></div>
 <div class="tasks" id="tasks"></div>
@@ -64,6 +66,43 @@ const fill=document.getElementById("fill");
 const progress=document.getElementById("progress");
 const complete=document.getElementById("complete");
 const note=document.getElementById("day-note");
+const weatherText=document.getElementById("weather-text");
+const weatherSource=document.getElementById("weather-source");
+let weatherCoords={lat:38.7223,lon:-9.1393,label:"Lisboa"};
+let weatherRequest=0;
+function localISO(date){return [date.getFullYear(),String(date.getMonth()+1).padStart(2,"0"),String(date.getDate()).padStart(2,"0")].join("-")}
+async function loadWeather(){
+ const request=++weatherRequest;
+ const date=new Date(monday);date.setDate(monday.getDate()+selectedDay+1);
+ const dateStr=localISO(date);
+ const todayStr=localISO(new Date());
+ weatherSource.textContent="Previsão para "+weatherCoords.label+" · Fonte: Open-Meteo";
+ if(dateStr<todayStr){weatherText.textContent="Este dia já passou. Escolhe outro separador para consultar a previsão.";return}
+ weatherText.textContent="A consultar a previsão para "+date.toLocaleDateString("pt-PT",{weekday:"long",day:"numeric",month:"long"})+"…";
+ try{
+  const url="https://api.open-meteo.com/v1/forecast?latitude="+weatherCoords.lat+"&longitude="+weatherCoords.lon+"&daily=temperature_2m_min,temperature_2m_max,precipitation_probability_max&timezone=Europe%2FLisbon&forecast_days=10";
+  const response=await fetch(url);
+  if(!response.ok)throw new Error("Previsão indisponível");
+  const data=await response.json();
+  if(request!==weatherRequest)return;
+  const index=data.daily?.time?.indexOf(dateStr)??-1;
+  if(index<0){weatherText.textContent="Ainda não existe previsão disponível para este dia.";return}
+  const low=Math.round(data.daily.temperature_2m_min[index]);
+  const high=Math.round(data.daily.temperature_2m_max[index]);
+  const rain=data.daily.precipitation_probability_max?.[index];
+  const cold=low<=12||high<=16;
+  const advice=cold?"🧥 Vai estar frio: prepara um casaco e roupa mais quente.":low<=16?"🧥 Pode estar fresco: leva um casaco leve.":"👕 Temperaturas amenas ou quentes: roupa mais leve poderá chegar.";
+  weatherText.textContent="Mín. "+low+"°C · Máx. "+high+"°C"+(Number.isFinite(rain)?" · Chuva "+rain+"%":"")+"\n"+advice;
+  weatherText.style.whiteSpace="pre-line";
+ }catch{if(request===weatherRequest)weatherText.textContent="Não foi possível obter a previsão. Tenta novamente mais tarde."}
+}
+document.getElementById("weather-location").addEventListener("click",()=>{
+ if(!navigator.geolocation){weatherText.textContent="O navegador não permite obter a localização.";return}
+ navigator.geolocation.getCurrentPosition(position=>{
+  weatherCoords={lat:position.coords.latitude,lon:position.coords.longitude,label:"a tua localização"};
+  loadWeather();
+ },()=>{weatherText.textContent="Sem acesso à localização. A previsão continua disponível para Lisboa.";weatherCoords={lat:38.7223,lon:-9.1393,label:"Lisboa"};}, {timeout:10000,maximumAge:1800000});
+});
 const monday=new Date();
 monday.setHours(12,0,0,0);
 monday.setDate(monday.getDate()-((monday.getDay()+6)%7));
@@ -95,6 +134,7 @@ function render(){
  const tasks=tasksFor(selectedDay);
  let done=readDone(selectedDay);
  note.textContent=dayNames[selectedDay]+" · Escolhe as tarefas que queres fazer neste dia";
+ loadWeather();
  list.replaceChildren();
  function save(){try{localStorage.setItem(storageKey(selectedDay),JSON.stringify(done))}catch{}}
  function update(){
