@@ -26,6 +26,7 @@ h1{font-size:clamp(31px,8vw,42px);line-height:1.12;margin:12px 0 10px;letter-spa
 .task input:checked~span:last-child{color:#b7cabc;text-decoration:line-through;text-decoration-color:#8eaa9a}
 .actions{display:flex;gap:10px;margin-top:20px}.btn{border:1px solid #ffffff3a;color:#eff5ff;border-radius:13px;background:#ffffff13;padding:13px 16px;font:inherit;font-weight:650;cursor:pointer;width:100%}
 .btn:active{transform:scale(.98)}.complete{display:none;text-align:center;color:#91edbc;font-weight:700;margin:18px 0 0}.complete.show{display:block}
+.week-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:0 0 16px}.day-tab{border:1px solid #ffffff30;border-radius:12px;background:#ffffff0e;color:#c4d2ec;font:inherit;font-size:13px;font-weight:750;padding:12px 2px;cursor:pointer}.day-tab[aria-selected="true"]{background:#74dfad;color:#0b3026;border-color:#74dfad}.day-tab:focus-visible{outline:2px solid white;outline-offset:2px}.day-note{color:#bec9de;font-size:13px;margin:0 0 18px;line-height:1.4}
 footer{text-align:center;color:#97a9ca;font-size:13px;margin-top:25px;line-height:1.6}
 </style>
 </head>
@@ -34,7 +35,9 @@ footer{text-align:center;color:#97a9ca;font-size:13px;margin-top:25px;line-heigh
 <div class="eyebrow">☾ &nbsp; A minha rotina</div>
 <h1>Checklist da noite</h1>
 <p class="sub">Só as tuas tarefas. Assinala à medida que vais preparando o dia de amanhã.</p>
+<nav class="week-tabs" aria-label="Dias da semana" role="tablist" id="week-tabs"></nav>
 <section class="panel" aria-label="Tarefas da noite">
+<p class="day-note" id="day-note"></p>
 <div class="top"><strong>Por fazer esta noite</strong><span class="count" id="count">0/5</span></div>
 <div class="track" role="progressbar" aria-label="Progresso" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" id="progress"><div class="fill" id="fill"></div></div>
 <div class="tasks" id="tasks"></div>
@@ -46,24 +49,73 @@ footer{text-align:center;color:#97a9ca;font-size:13px;margin-top:25px;line-heigh
 <script>
 (() => {
 "use strict";
-const tasks=["Lanche dos miúdos","Leite com chocolate para amanhã de manhã","Roupa para amanhã","Calçado para amanhã","Lanches para amanhã"];
-const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
-if(tomorrow.getDay()===3)tasks.push("Preparar as coisas da natação da Carminho (quarta-feira)");
-if(tomorrow.getDay()===4)tasks.push("Preparar as coisas de Educação Física da Mercedes (quinta-feira)");
-const key="checklist-noite-v1";
-let done=[];
-try{const stored=JSON.parse(localStorage.getItem(key)||"[]");done=Array.isArray(stored)?stored.filter(x=>Number.isInteger(x)&&x>=0&&x<tasks.length):[]}catch{}
+const baseTasks=["Lanche dos miúdos","Leite com chocolate para amanhã de manhã","Roupa para amanhã","Calçado para amanhã","Lanches para amanhã"];
+const dayNames=["Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira"];
+const shortNames=["Seg","Ter","Qua","Qui","Sex"];
+const today=new Date().getDay();
+let selectedDay=today>=1&&today<=5?today-1:0;
+const tabs=document.getElementById("week-tabs");
 const list=document.getElementById("tasks");
 const count=document.getElementById("count");
 const fill=document.getElementById("fill");
 const progress=document.getElementById("progress");
 const complete=document.getElementById("complete");
-progress.setAttribute("aria-valuemax",tasks.length);
-function save(){try{localStorage.setItem(key,JSON.stringify(done))}catch{}}
-function update(){count.textContent=done.length+"/"+tasks.length;fill.style.width=(100*done.length/tasks.length)+"%";progress.setAttribute("aria-valuenow",done.length);complete.classList.toggle("show",done.length===tasks.length)}
-tasks.forEach((text,i)=>{const label=document.createElement("label");label.className="task";const input=document.createElement("input");input.type="checkbox";input.checked=done.includes(i);input.setAttribute("aria-label",text);const check=document.createElement("span");check.className="check";check.textContent="✓";check.setAttribute("aria-hidden","true");const span=document.createElement("span");span.textContent=text;label.append(input,check,span);input.addEventListener("change",()=>{done=input.checked?[...new Set([...done,i])]:done.filter(x=>x!==i);save();update()});list.append(label)});
-document.getElementById("reset").addEventListener("click",()=>{done=[];list.querySelectorAll("input").forEach(x=>x.checked=false);save();update()});
-update();
+const note=document.getElementById("day-note");
+const monday=new Date();
+monday.setHours(12,0,0,0);
+monday.setDate(monday.getDate()-((monday.getDay()+6)%7));
+const weekId=[monday.getFullYear(),String(monday.getMonth()+1).padStart(2,"0"),String(monday.getDate()).padStart(2,"0")].join("-");
+function tasksFor(day){
+ const tasks=[...baseTasks];
+ if(day===1)tasks.push("Preparar as coisas da natação da Carminho (quarta-feira)");
+ if(day===2)tasks.push("Preparar as coisas de Educação Física da Mercedes (quinta-feira)");
+ return tasks;
+}
+function storageKey(day){return "checklist-noite-v2-"+weekId+"-"+day}
+function readDone(day){
+ const tasks=tasksFor(day);
+ try{
+  const stored=JSON.parse(localStorage.getItem(storageKey(day))||"[]");
+  return Array.isArray(stored)?stored.filter(x=>Number.isInteger(x)&&x>=0&&x<tasks.length):[];
+ }catch{return []}
+}
+function render(){
+ tabs.replaceChildren();
+ dayNames.forEach((name,day)=>{
+  const btn=document.createElement("button");
+  btn.type="button";btn.className="day-tab";btn.role="tab";
+  btn.textContent=shortNames[day];btn.setAttribute("aria-label",name);
+  btn.setAttribute("aria-selected",String(day===selectedDay));
+  btn.addEventListener("click",()=>{selectedDay=day;render()});
+  tabs.append(btn);
+ });
+ const tasks=tasksFor(selectedDay);
+ let done=readDone(selectedDay);
+ note.textContent=dayNames[selectedDay]+" à noite · Preparar o dia seguinte";
+ list.replaceChildren();
+ function save(){try{localStorage.setItem(storageKey(selectedDay),JSON.stringify(done))}catch{}}
+ function update(){
+  count.textContent=done.length+"/"+tasks.length;
+  fill.style.width=(100*done.length/tasks.length)+"%";
+  progress.setAttribute("aria-valuemax",tasks.length);
+  progress.setAttribute("aria-valuenow",done.length);
+  complete.classList.toggle("show",done.length===tasks.length);
+ }
+ tasks.forEach((text,i)=>{
+  const label=document.createElement("label");label.className="task";
+  const input=document.createElement("input");input.type="checkbox";input.checked=done.includes(i);input.setAttribute("aria-label",text);
+  const check=document.createElement("span");check.className="check";check.textContent="✓";check.setAttribute("aria-hidden","true");
+  const span=document.createElement("span");span.textContent=text;
+  label.append(input,check,span);
+  input.addEventListener("change",()=>{done=input.checked?[...new Set([...done,i])]:done.filter(x=>x!==i);save();update()});
+  list.append(label);
+ });
+ document.getElementById("reset").onclick=()=>{
+  done=[];list.querySelectorAll("input").forEach(x=>x.checked=false);save();update();
+ };
+ update();
+}
+render();
 })();
 </script>
 </body></html>
