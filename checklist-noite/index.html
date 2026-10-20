@@ -47,6 +47,9 @@ footer{text-align:center;color:#97a9ca;font-size:13px;margin-top:25px;line-heigh
 (() => {
 "use strict";
 const tasks=["Lanche dos miúdos","Leite com chocolate para amanhã de manhã","Roupa para amanhã","Calçado para amanhã","Lanches para amanhã"];
+const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
+if(tomorrow.getDay()===3)tasks.push("Preparar as coisas da natação da Carminho (quarta-feira)");
+if(tomorrow.getDay()===4)tasks.push("Preparar as coisas de Educação Física da Mercedes (quinta-feira)");
 const key="checklist-noite-v1";
 let done=[];
 try{const stored=JSON.parse(localStorage.getItem(key)||"[]");done=Array.isArray(stored)?stored.filter(x=>Number.isInteger(x)&&x>=0&&x<tasks.length):[]}catch{}
@@ -55,6 +58,7 @@ const count=document.getElementById("count");
 const fill=document.getElementById("fill");
 const progress=document.getElementById("progress");
 const complete=document.getElementById("complete");
+progress.setAttribute("aria-valuemax",tasks.length);
 function save(){try{localStorage.setItem(key,JSON.stringify(done))}catch{}}
 function update(){count.textContent=done.length+"/"+tasks.length;fill.style.width=(100*done.length/tasks.length)+"%";progress.setAttribute("aria-valuenow",done.length);complete.classList.toggle("show",done.length===tasks.length)}
 tasks.forEach((text,i)=>{const label=document.createElement("label");label.className="task";const input=document.createElement("input");input.type="checkbox";input.checked=done.includes(i);input.setAttribute("aria-label",text);const check=document.createElement("span");check.className="check";check.textContent="✓";check.setAttribute("aria-hidden","true");const span=document.createElement("span");span.textContent=text;label.append(input,check,span);input.addEventListener("change",()=>{done=input.checked?[...new Set([...done,i])]:done.filter(x=>x!==i);save();update()});list.append(label)});
