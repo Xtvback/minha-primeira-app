@@ -76,11 +76,10 @@ async function loadWeather(){
  const weatherCard=document.getElementById("weather-text").closest(".weather");
  weatherCard.style.display=selectedDay===5?"none":"";
  if(selectedDay===5)return;
- const date=new Date(monday);date.setDate(monday.getDate()+selectedDay);
+ const date=new Date();date.setHours(12,0,0,0);const targetWeekday=[1,2,3,4,5,6][selectedDay];const daysAhead=(targetWeekday-date.getDay()+7)%7;date.setDate(date.getDate()+daysAhead);
  const dateStr=localISO(date);
- const todayStr=localISO(new Date());
+
  weatherSource.textContent="Previsão para "+weatherCoords.label+" · Fonte: Open-Meteo";
- if(dateStr<todayStr){weatherText.textContent="Este dia já passou. Escolhe outro separador para consultar a previsão.";return}
  weatherText.textContent="A consultar a previsão para "+date.toLocaleDateString("pt-PT",{weekday:"long",day:"numeric",month:"long"})+"…";
  try{
   const url="https://api.open-meteo.com/v1/forecast?latitude="+weatherCoords.lat+"&longitude="+weatherCoords.lon+"&daily=temperature_2m_min,temperature_2m_max,precipitation_probability_max&timezone=Europe%2FLisbon&forecast_days=10";
@@ -159,7 +158,7 @@ function render(){
   list.append(label);
  });
  document.getElementById("reset").onclick=()=>{
-  done=[];list.querySelectorAll("input").forEach(x=>x.checked=false);save();update();
+  done=[];try{localStorage.removeItem(storageKey(selectedDay))}catch{};render();
  };
  update();
 }
